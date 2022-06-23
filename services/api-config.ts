@@ -8,6 +8,11 @@ export interface ApiConfig {
   url: string;
   
   /**
+   * The URL NODE of the api.
+   */
+  url_node: string;
+  
+  /**
    * Milliseconds before we timeout the request.
    */
   timeout: number;
@@ -18,5 +23,6 @@ export interface ApiConfig {
  */
 export const DEFAULT_API_CONFIG: ApiConfig = {
   url: process.env.API_URL,
+  url_node: process.env.API_URL_NODE,
   timeout: 30000
 };

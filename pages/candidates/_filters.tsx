@@ -7,7 +7,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { styled } from "@mui/material/styles";
 import Divider from "@mui/material/Divider";
-import { api } from "/services/api";
+import { api, apiNode } from "/services/api";
 import { Button, Paper } from "@mui/material";
 import Router from "next/router";
 import cookie from 'js-cookie';
@@ -70,43 +70,43 @@ const Filters = ({ setSkills, setLevelsCurrent, setStatesCurrent, setLanguagesCu
   }, []);
   
   async function getLevels() {
-    const { data } = await api.get('/level')
-    setLevels(data)
+    const { data } = await api.get('/candidates/level')
+    setLevels(data.data)
   }
   
   async function getStacks() {
-    const { data } = await api.get('/stack')
-    setStacks(data)
+    const { data } = await api.get('/candidates/skill')
+    setStacks(data.data)
   }
   
   async function getStates() {
-    const { data } = await api.get('/state')
-    setStates(data)
+    const { data } = await api.get('/candidates/state')
+    setStates(data.data)
   }
   
   
   const handleChangeLevel = (event, value) => {
     let selectLevels = []
     value.forEach((item) => {
-      selectLevels.push(item.level)
+      selectLevels.push(item)
     })
-    setLevelsCurrent({ "levels": selectLevels })
+    setLevelsCurrent({ "level": selectLevels.toString() })
   };
   
   const handleChangeSkill = (event, value) => {
     let selectSkills = []
     value.forEach((item) => {
-      selectSkills.push(item.tech_stack_expertise)
+      selectSkills.push(item)
     })
-    setSkills({ "skills": selectSkills })
+    setSkills({ "skill": selectSkills.toString() })
   };
   
   const handleChangeStates = (event, value) => {
     let selectStates = []
     value.forEach((item) => {
-      selectStates.push(item.state)
+      selectStates.push(item)
     })
-    setStatesCurrent({ "states": selectStates })
+    setStatesCurrent({ "state": selectStates.toString() })
   };
   
   const handleChangeLanguages = (event, value) => {
@@ -114,7 +114,7 @@ const Filters = ({ setSkills, setLevelsCurrent, setStatesCurrent, setLanguagesCu
     value.forEach((item) => {
       selectLanguages.push(item.language)
     })
-    setLanguagesCurrent({ "languages": selectLanguages })
+    setLanguagesCurrent({ "language": selectLanguages.toString() })
   };
   
   const handleChangeFormation = (event, value) => {
@@ -122,7 +122,7 @@ const Filters = ({ setSkills, setLevelsCurrent, setStatesCurrent, setLanguagesCu
     value.forEach((item) => {
       selectFormation.push(item.formation)
     })
-    setFormationsCurrent({ "formations": selectFormation })
+    setFormationsCurrent({ "formation": selectFormation.toString() })
   };
   
   const Logout = () => {
@@ -138,7 +138,7 @@ const Filters = ({ setSkills, setLevelsCurrent, setStatesCurrent, setLanguagesCu
         id="checkboxes-tags-demo"
         options={levels ? levels : []}
         disableCloseOnSelect
-        getOptionLabel={(option) => option.level}
+        getOptionLabel={(option) => option}
         onChange={handleChangeLevel}
         renderOption={(props, option, { selected }) => (
           <li {...props}>
@@ -148,7 +148,7 @@ const Filters = ({ setSkills, setLevelsCurrent, setStatesCurrent, setLanguagesCu
               style={{ marginRight: 8 }}
               checked={selected}
             />
-            {option.level}
+            {option}
           </li>
         )}
         style={{ width: 500, maxWidth: '100%' }}
@@ -164,7 +164,7 @@ const Filters = ({ setSkills, setLevelsCurrent, setStatesCurrent, setLanguagesCu
         options={stacks ? stacks : []}
         disableCloseOnSelect
         onChange={handleChangeSkill}
-        getOptionLabel={(option) => option.tech_stack_expertise}
+        getOptionLabel={(option) => option}
         renderOption={(props, option, { selected }) => (
           <li {...props}>
             <Checkbox
@@ -173,7 +173,7 @@ const Filters = ({ setSkills, setLevelsCurrent, setStatesCurrent, setLanguagesCu
               style={{ marginRight: 8 }}
               checked={selected}
             />
-            {option.tech_stack_expertise}
+            {option}
           </li>
         )}
         style={{ width: 500, maxWidth: '100%' }}
@@ -189,7 +189,7 @@ const Filters = ({ setSkills, setLevelsCurrent, setStatesCurrent, setLanguagesCu
         options={states ? states : []}
         disableCloseOnSelect
         onChange={handleChangeStates}
-        getOptionLabel={(option) => option.state}
+        getOptionLabel={(option) => option}
         renderOption={(props, option, { selected }) => (
           <li {...props}>
             <Checkbox
@@ -198,7 +198,7 @@ const Filters = ({ setSkills, setLevelsCurrent, setStatesCurrent, setLanguagesCu
               style={{ marginRight: 8 }}
               checked={selected}
             />
-            {option.state}
+            {option}
           </li>
         )}
         style={{ width: 500, maxWidth: '100%' }}

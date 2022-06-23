@@ -69,12 +69,12 @@ const CardItem: React.FC<IItemCard> = ({ item }: IItemCard) => {
             </div>
             <div>
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 1, sm: 2, md: 4 }}>
-                {item.skill ? item.skill.split(",").map((value) => <Chip label={value}/>) : null}
+                {item.skill ? item.skill.map((value) => <Chip label={value}/>) : null}
               </Stack>
             </div>
             <div>
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 1, sm: 2, md: 4 }}>
-                {item.language ? item.language.split(",").map((value) => <Chip label={value}/>) : null}
+                {item.language ? item.language.map((value) => <Chip label={value}/>) : null}
               </Stack>
             </div>
             <div>
@@ -142,14 +142,14 @@ interface ICandidate {
   state: string | null;
   formation: string | null;
   experience: string | null;
-  skill: string | null;
+  skill: [] | null;
   level: string | null;
   frameworks: [] | null;
   languages: [] | null;
   infrastructures: [] | null;
   has_children: string | null;
   github: string | null;
-  language: string | null;
+  language: [] | null;
 }
 
 interface Props {

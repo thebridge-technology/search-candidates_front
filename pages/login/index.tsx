@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Router from 'next/router'
-import { api } from "../../services/api";
+import { api, apiNode } from "../../services/api";
 import { Alert, Snackbar } from "@mui/material";
 
 function Copyright(props: any) {
@@ -47,7 +47,7 @@ export default function SignIn() {
   };
   
   async function login(body = null) {
-    const response = await api.post('/login', {
+    const response = await apiNode.post('/login', {
       user: body.get('user'),
       password: body.get('password')
     })

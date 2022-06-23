@@ -5,6 +5,6 @@ WORKDIR /app
 # install and cache app dependencies
 COPY package.json /app/package.json
 
-EXPOSE 3000
+EXPOSE 3002
 
-CMD ["yarn", "dev"]
+CMD ["yarn", "dev", "--port", "3002"]

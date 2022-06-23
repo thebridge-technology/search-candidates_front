@@ -23,7 +23,7 @@ import logo from '/public/static/icons/logo.svg';
 import ListCard from "./_list";
 import Filters from "./_filters";
 import { api } from "/services/api";
-import { Pagination } from "@mui/material";
+import { Backdrop, CircularProgress, Pagination } from "@mui/material";
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -162,6 +162,7 @@ const Candidates: NextPage = props => {
   const [statesCurrent, setStatesCurrent] = useState({})
   const [languagesCurrent, setLanguagesCurrent] = useState({})
   const [formationsCurrent, setFormationsCurrent] = useState({})
+  const [loading, setLoading] = useState(false);
   
   useEffect(() => {
     getCandidates();
@@ -176,25 +177,32 @@ const Candidates: NextPage = props => {
   ]);
   
   async function getCandidates() {
-    const token = cookie.get("token");
-    if (!token) {
-      Router.push('/login');
+    setLoading(true);
+    try {
+      const token = cookie.get("token");
+      if (!token) {
+        Router.push('/login');
+      }
+  
+      const { data } = await api.get(`/candidates/${pageCurrent}`, {
+        ...searchName,
+        ...skills,
+        ...levelsCurrent,
+        ...statesCurrent,
+        ...languagesCurrent,
+        ...formationsCurrent,
+      })
+      if (data) {
+        setTotal(data.total)
+        setQuantityPages(data.total_pages)
+        setCandidates(data.data)
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false)
     }
-    api.setHeader("Authorization", token);
-    const { data } = await api.get('/candidates', {
-      ...searchName,
-      ...skills,
-      ...levelsCurrent,
-      ...statesCurrent,
-      ...languagesCurrent,
-      ...formationsCurrent,
-      'page': pageCurrent
-    })
-    if (data) {
-      setTotal(data.total)
-      setQuantityPages(data.total_pages)
-      setCandidates(data.data)
-    }
+    
   }
   
   const theme = useTheme();
@@ -288,7 +296,14 @@ const Candidates: NextPage = props => {
         <div>
           Result: {total}
         </div>
-        <ListCard candidates={candidates}/>
+        {loading ? (
+          <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={loading}
+          >
+            <CircularProgress color="inherit"/>
+          </Backdrop>) : <ListCard candidates={candidates}/>
+        }
         <CustomPagination
           count={quantityPages}
           color="primary"
